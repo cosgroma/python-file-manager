@@ -4,7 +4,7 @@
 Details:    This module contains the core functionality for the file manager
 Created:   Saturday, October 12th 2024, 3:26:09 pm
 -----
-Last Modified: 10/12/2024 04:20:23
+Last Modified: 10/12/2024 04:47:42
 Modified By: Mathew Cosgrove
 -----
 """
@@ -51,15 +51,16 @@ def get_file_info(file_path: Path) -> Dict[str, Any]:
     Returns:
         _type_: _description_
     """
-    file_info = dict()
+    file_info: Dict[str, Any] = {}
     file_info["name"] = Path(file_path).name
     file_info["metadata"] = []
     try:
-        file_stats = os.stat(file_path)
+        file_stats = Path.stat(file_path)
         result = subprocess.run(["file", "-b", file_path], capture_output=True, text=True)
         file_details = result.stdout
-        file_hash = hashlib.md5(f"{file_path}".encode())
 
+        # make secure hash
+        file_hash = hashlib.sha256(f"{file_path}".encode())
         file_info.update(
             {
                 "id": str(uuid.UUID(file_hash.hexdigest())),
@@ -68,7 +69,7 @@ def get_file_info(file_path: Path) -> Dict[str, Any]:
                 "relative_path": str(Path(file_path).relative_to(Path.cwd())),
                 "type": mimetypes.guess_type(file_path, False)[0] or "UNK",
                 "size": file_stats.st_size,
-                "last_modified": datetime.fromtimestamp(file_stats.st_mtime).isoformat(),
+                "last_modified": datetime.fromtimestamp(file_stats.st_mtime, tz=datetime.now().astimezone().tzinfo).isoformat(),
                 "info": file_details.strip(),
             }
         )
@@ -108,7 +109,7 @@ def get_file_list(directory: Path) -> List[Path]:
         List[Path]: The list of files
     """
     file_list = []
-    for root, dirs, files in os.walk(directory):
+    for root, _, files in os.walk(directory):
         if len(files) == 0:
             continue
         # skip directories we don't want to scan
@@ -165,6 +166,6 @@ def cmd_scan(directory: Path, output_file: Path) -> List[Dict[str, Any]]:
     # if os.path.exists(output_file):
     #     print(f"Warning: Output file {output_file} already exists - overwriting")
 
-    with open(output_file, "w") as json_file:
+    with Path.open(output_file, "w") as json_file:
         json.dump(file_info_list, json_file, indent=4)
     return file_info_list
