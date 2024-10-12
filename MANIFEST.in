@@ -12,10 +12,10 @@ include .pre-commit-config.yaml
 include pytest.ini
 include tox.ini
 
-include AUTHORS.rst
-include CHANGELOG.rst
-include CONTRIBUTING.rst
+include AUTHORS.md
+include CHANGELOG.md
+include CONTRIBUTING.md
 include LICENSE
-include README.rst
+include README.md
 
 global-exclude *.py[cod] __pycache__/* *.so *.dylib

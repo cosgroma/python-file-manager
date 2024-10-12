@@ -1,47 +1,22 @@
-Overview
-========
+# Python File Manager
 
-  --------- -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  tests     [![GitHub Actions Build Status](https://github.com/cosgroma/python-file-manager/actions/workflows/github-actions.yml/badge.svg)](https://github.com/cosgroma/python-file-manager/actions) [![Coverage Status](https://codecov.io/gh/cosgroma/python-file-manager/branch/main/graphs/badge.svg?branch=main)](https://app.codecov.io/github/cosgroma/python-file-manager)
-  package   [![PyPI Package latest release](https://img.shields.io/pypi/v/sgt-file-manager.svg)](https://pypi.org/project/sgt-file-manager) [![PyPI Wheel](https://img.shields.io/pypi/wheel/sgt-file-manager.svg)](https://pypi.org/project/sgt-file-manager) [![Supported versions](https://img.shields.io/pypi/pyversions/sgt-file-manager.svg)](https://pypi.org/project/sgt-file-manager) [![Supported implementations](https://img.shields.io/pypi/implementation/sgt-file-manager.svg)](https://pypi.org/project/sgt-file-manager) [![Commits since latest release](https://img.shields.io/github/commits-since/cosgroma/python-file-manager/v0.0.0.svg)](https://github.com/cosgroma/python-file-manager/compare/v0.0.0...main)
-  --------- -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+This is a Python package that provides a simple file manager class that can be used to manage files and directories. The package is available on PyPI and can be installed using pip:
 
-File Management Library
+## Overview
 
--   Free software: MIT license
+| | |
+| --- | --- |
+| GitHub Actions | [![GitHub Actions Build Status](https://github.com/cosgroma/python-file-manager/actions/workflows/github-actions.yml/badge.svg)](https://github.com/cosgroma/python-file-manager/actions) |
+| Coverage Status | [![Coverage Status](https://codecov.io/gh/cosgroma/python-file-manager/branch/main/graphs/badge.svg?branch=main)](https://app.codecov.io/github/cosgroma/python-file-manager) |
+| PyPI Package | [![PyPI Package latest release](https://img.shields.io/pypi/v/sgt-file-manager.svg)](https://pypi.org/project/sgt-file-manager)  |
+| PyPI Wheel | [![PyPI Wheel](https://img.shields.io/pypi/wheel/sgt-file-manager.svg)](https://pypi.org/project/sgt-file-manager)  |
+| Supported versions | [![Supported versions](https://img.shields.io/pypi/pyversions/sgt-file-manager.svg)](https://pypi.org/project/sgt-file-manager)  |
+| Supported implementations | [![Supported implementations](https://img.shields.io/pypi/implementation/sgt-file-manager.svg)](https://pypi.org/project/sgt-file-manager)  |
+| Commits since | [![Commits since latest release](https://img.shields.io/github/commits-since/cosgroma/python-file-manager/v0.0.0.svg)](https://github.com/cosgroma/python-file-manager/compare/v0.0.0...main) |
 
-Installation
-------------
 
-    pip install sgt-file-manager
-
-You can also install the in-development version with:
-
-    pip install https://github.com/cosgroma/python-file-manager/archive/main.zip
-
-Documentation
--------------
-
-To use the project:
-
-``` {.python}
-import sgt_file_manager
-sgt_file_manager.compute(...)
+```bash
+pip install sgt-file-manager
 ```
 
-Development
------------
-
-To run all the tests run:
-
-    tox
-
-Note, to combine the coverage data from all the tox environments run:
-
-+------+---------------------------------------------------------------+
-| Win  |     set PYTEST_ADDOPTS=--cov-append                           |
-| dows |     tox                                                       |
-+------+---------------------------------------------------------------+
-| O    |     PYTEST_ADDOPTS=--cov-append tox                           |
-| ther |                                                               |
-+------+---------------------------------------------------------------+
+## Usage

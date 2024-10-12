@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import re
 from pathlib import Path
 
 from setuptools import find_packages
@@ -11,15 +10,21 @@ def read(*names, **kwargs):
         return fh.read()
 
 
+def get_requirements(filename="requirements.txt"):
+    if not Path(filename).exists():
+        print(f"WARNING: {filename} not found")
+        return []
+    with Path.open(filename) as f:
+        requires = [line.replace("\n", "") for line in f.readlines()]
+    return requires
+
+
 setup(
     name="sgt-file-manager",
     version="0.0.0",
     license="MIT",
     description="File Management Library",
-    long_description="{}\n{}".format(
-        re.compile("^.. start-badges.*^.. end-badges", re.M | re.S).sub("", read("README.md")),
-        re.sub(":[a-z]+:`~?(.*?)`", r"``\1``", read("CHANGELOG.md")),
-    ),
+    long_description=read("README.md"),
     author="Mathew Cosgrove",
     author_email="cosgroma@gmail.com",
     url="https://github.com/cosgroma/python-file-manager",
@@ -60,10 +65,7 @@ setup(
         # eg: "keyword1", "keyword2", "keyword3",
     ],
     python_requires=">=3.8",
-    install_requires=[
-        "click",
-        # eg: "aspectlib==1.1.1", "six>=1.7",
-    ],
+    install_requires=get_requirements(),
     extras_require={
         # eg:
         #   "rst": ["docutils>=0.11"],
@@ -71,7 +73,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "sgt-kb = sgt_file_manager.cli:run",
+            "sgt-kb = sgt_file_manager.cli:sgt_kb_main",
         ]
     },
 )

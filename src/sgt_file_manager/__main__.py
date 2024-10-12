@@ -9,7 +9,7 @@ Why does this file exist, and why __main__? For more info, read:
 - https://docs.python.org/3/using/cmdline.html#cmdoption-m
 """
 
-from sgt_file_manager.cli import run
+from sgt_file_manager.cli import sgt_kb_main
 
 if __name__ == "__main__":
-    run()
+    sgt_kb_main()

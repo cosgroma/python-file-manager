@@ -15,12 +15,26 @@ Why does this file exist, and why not put this in __main__?
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
 
-import click
+from pathlib import Path
+from pprint import pprint
 
-from .core import compute
+import click
+from pygments import formatters
+from pygments import highlight
+from pygments import lexers
+
+from .core import cmd_scan
 
 
 @click.command()
-@click.argument("names", nargs=-1)
-def run(names):
-    click.echo(compute(names))
+@click.argument("directory", type=click.Path(exists=True))
+@click.option("--pretty", "-p", is_flag=True)
+@click.option("--db-file", "-f", is_flag=False)
+def sgt_kb_main(directory: str, pretty: bool, db_file: str = "./output_file.json"):
+    """CLI interface kb file scanner"""
+    db_file_path = Path(db_file)
+    data = cmd_scan(directory, db_file_path)
+    if pretty:
+        data = highlight(data, lexers.JsonLexer(), formatters.TerminalFormatter())
+    else:
+        pprint(data)

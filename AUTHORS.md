@@ -1,4 +1,3 @@
-Authors
-=======
+# Authors
 
--   Mathew Cosgrove - <https://sergeant.work>
+* Mathew Cosgrove

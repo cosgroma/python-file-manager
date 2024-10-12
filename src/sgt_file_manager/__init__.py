@@ -1,7 +1,7 @@
 __version__ = "0.0.0"
 
-from .core import compute
+from .core import cmd_scan
 
 __all__ = [
-    "compute",
+    "cmd_scan",
 ]
