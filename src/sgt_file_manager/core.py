@@ -4,7 +4,7 @@
 Details:    This module contains the core functionality for the file manager
 Created:   Saturday, October 12th 2024, 3:26:09 pm
 -----
-Last Modified: 10/12/2024 04:47:42
+Last Modified: 10/12/2024 04:49:10
 Modified By: Mathew Cosgrove
 -----
 """
@@ -138,6 +138,10 @@ def scan_directory(directory: Path) -> List[Dict[str, Any]]:
     file_info = []
 
     files = get_file_list(directory)
+    if not files or len(files) == 0:
+        print(f"No files found in {directory}")
+        return file_info
+
     bar = Bar(f"Processing {directory}", max=len(files))
     for file in files:
         try:
@@ -163,9 +167,6 @@ def cmd_scan(directory: Path, output_file: Path) -> List[Dict[str, Any]]:
     """
     dirpath = Path(directory).absolute()
     file_info_list = scan_directory(dirpath)
-    # if os.path.exists(output_file):
-    #     print(f"Warning: Output file {output_file} already exists - overwriting")
-
     with Path.open(output_file, "w") as json_file:
         json.dump(file_info_list, json_file, indent=4)
     return file_info_list
