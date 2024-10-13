@@ -4,7 +4,7 @@
 Details:    This module contains the core functionality for the file manager
 Created:   Saturday, October 12th 2024, 3:26:09 pm
 -----
-Last Modified: 10/12/2024 04:49:10
+Last Modified: 10/12/2024 05:05:08
 Modified By: Mathew Cosgrove
 -----
 """
@@ -60,10 +60,11 @@ def get_file_info(file_path: Path) -> Dict[str, Any]:
         file_details = result.stdout
 
         # make secure hash
-        file_hash = hashlib.sha256(f"{file_path}".encode())
+        file_hash = hashlib.sha256(f"{file_path}".encode()).digest()
+
         file_info.update(
             {
-                "id": str(uuid.UUID(file_hash.hexdigest())),
+                "id": str(uuid.UUID(bytes=file_hash[:16])),
                 "name": Path(file_path).name,
                 "full_path": str(file_path),
                 "relative_path": str(Path(file_path).relative_to(Path.cwd())),

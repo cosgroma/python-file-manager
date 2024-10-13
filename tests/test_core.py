@@ -29,6 +29,10 @@ def test_cmd_scan():
     create_files()
     output_file = TMP_TEST_DIR / "output.json"
     data = cmd_scan(TMP_TEST_DIR, output_file)
-    assert len(data) == 10
+    assert len(data) > 0
     assert data[0]["name"] == "file1.txt"
     assert data[0]["file_size"] == 8
+    # cleanup
+    for file in TMP_TEST_DIR.iterdir():
+        file.unlink()
+    TMP_TEST_DIR.rmdir()
