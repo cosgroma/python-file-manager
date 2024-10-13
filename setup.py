@@ -14,7 +14,7 @@ def get_requirements(filename="requirements.txt"):
     if not Path(filename).exists():
         print(f"WARNING: {filename} not found")
         return []
-    with Path.open(filename) as f:
+    with Path.open(Path(filename)) as f:
         requires = [line.replace("\n", "") for line in f.readlines()]
     return requires
 

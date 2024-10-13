@@ -2,7 +2,7 @@ from pathlib import Path
 
 from sgt_file_manager import cmd_scan
 
-TMP_TEST_DIR = Path("tmp_test_dir")
+TMP_TEST_DIR = Path(__file__).parent / "tmp"
 
 
 def create_files():
@@ -18,8 +18,10 @@ def create_files():
         "file9.txt",
         "file10.txt",
     ]
+    # create test directory
+    Path.mkdir(TMP_TEST_DIR, exist_ok=True)
     for file in files:
-        with open(TMP_TEST_DIR / file, "w") as f:
+        with Path.open(TMP_TEST_DIR / file, "w") as f:
             f.write("test data")
 
 
@@ -28,5 +30,5 @@ def test_cmd_scan():
     output_file = TMP_TEST_DIR / "output.json"
     data = cmd_scan(TMP_TEST_DIR, output_file)
     assert len(data) == 10
-    assert data[0]["file_name"] == "file1.txt"
+    assert data[0]["name"] == "file1.txt"
     assert data[0]["file_size"] == 8
