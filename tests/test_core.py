@@ -36,15 +36,23 @@ def create_skip_dirs():
         Path.mkdir(TMP_TEST_DIR / dir, exist_ok=True)
 
 
+def cleanup():
+    # cleanup
+    for file in TMP_TEST_DIR.iterdir():
+        if Path.is_file(file):
+            file.unlink()
+        else:
+            file.rmdir()
+    TMP_TEST_DIR.rmdir()
+
+
 def test_get_file_list():
     create_files()
     files = get_file_list(TMP_TEST_DIR)
     assert len(files) == 10
 
     # cleanup
-    for file in TMP_TEST_DIR.iterdir():
-        file.unlink()
-    TMP_TEST_DIR.rmdir()
+    cleanup()
 
 
 def test_get_file_list_skip_dirs():
@@ -53,9 +61,7 @@ def test_get_file_list_skip_dirs():
     assert len(files) == 0
 
     # cleanup
-    for file in TMP_TEST_DIR.iterdir():
-        file.unlink()
-    TMP_TEST_DIR.rmdir()
+    cleanup()
 
 
 def test_cmd_scan():
@@ -75,6 +81,4 @@ def test_cmd_scan():
     assert len(data[0]["info"]) > 0
 
     # cleanup
-    for file in TMP_TEST_DIR.iterdir():
-        file.unlink()
-    TMP_TEST_DIR.rmdir()
+    cleanup()
