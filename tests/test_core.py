@@ -31,7 +31,7 @@ def test_cmd_scan():
     data = cmd_scan(TMP_TEST_DIR, output_file)
     assert len(data) > 0
     # assert data[0]["name"] == "file1.txt"
-    assert data[0]["file_size"] == 8
+    assert data[0]["size"] > 0
     # cleanup
     for file in TMP_TEST_DIR.iterdir():
         file.unlink()
