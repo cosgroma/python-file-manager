@@ -4,7 +4,7 @@
 Details:   This module contains the core functionality for the file manager
 Created:   Saturday, October 12th 2024, 3:26:09 pm
 -----
-Last Modified: 10/12/2024 07:06:58
+Last Modified: 10/12/2024 07:59:20
 Modified By: Mathew Cosgrove
 -----
 """
@@ -139,12 +139,19 @@ def get_file_list(directory: Path) -> List[Path]:
         for file in files:
             # remove directory string from file path
             file_path_no_dir = Path(root).relative_to(directory) / file
-            # get first part of file_path_no_dir
-            # if it is in DIR_TO_SKIP, skip
-            if str(file_path_no_dir).split("/")[0] in DIR_TO_SKIP:
+            # if any sub directory in file_path_no_dir is in DIR_TO_SKIP, then skip
+            dir_skip = False
+            for sub_dir in str(file_path_no_dir).split("/"):
+                if str(sub_dir) in DIR_TO_SKIP:
+                    dir_skip = True
+                    break
+
+            if dir_skip:
                 continue
+
             if file_path_no_dir.suffix in FILE_EXT_TO_SKIP:
                 continue
+            # skip files with extensions in FILE_EXT_TO_SKIP
             file_list.append(Path(root) / file)
     return file_list
 
