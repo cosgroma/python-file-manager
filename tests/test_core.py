@@ -2,6 +2,8 @@ from datetime import datetime
 from pathlib import Path
 
 from sgt_file_manager import cmd_scan
+from sgt_file_manager import get_file_list
+from sgt_file_manager.core import DIR_TO_SKIP
 
 TMP_TEST_DIR = Path(__file__).parent / "tmp"
 
@@ -26,8 +28,34 @@ def create_files():
             f.write("test data")
 
 
-def get_datetime_from_iso(iso_str):
-    return datetime.fromisoformat(iso_str)
+def create_skip_dirs():
+    dirs = DIR_TO_SKIP
+    # create test directory
+    Path.mkdir(TMP_TEST_DIR, exist_ok=True)
+    for dir in dirs:
+        Path.mkdir(TMP_TEST_DIR / dir, exist_ok=True)
+
+
+def test_get_file_list():
+    create_files()
+    files = get_file_list(TMP_TEST_DIR)
+    assert len(files) == 10
+
+    # cleanup
+    for file in TMP_TEST_DIR.iterdir():
+        file.unlink()
+    TMP_TEST_DIR.rmdir()
+
+
+def test_get_file_list_skip_dirs():
+    create_skip_dirs()
+    files = get_file_list(TMP_TEST_DIR)
+    assert len(files) == 0
+
+    # cleanup
+    for file in TMP_TEST_DIR.iterdir():
+        file.unlink()
+    TMP_TEST_DIR.rmdir()
 
 
 def test_cmd_scan():
@@ -35,24 +63,6 @@ def test_cmd_scan():
     output_file = TMP_TEST_DIR / "output.json"
     data = cmd_scan(TMP_TEST_DIR, output_file)
     assert len(data) > 0
-
-    # assert data[0]["created"] < test_datetime
-    #     file_info.update(
-    #     {
-    #         "id": str(uuid.UUID(bytes=file_hash[:16])),
-    #         "name": Path(file_path).name,
-    #         "full_path": str(file_path),
-    #         # "relative_path": str(Path(file_path).relative_to(Path.cwd())),
-    #         "type": mimetypes.guess_type(file_path, False)[0] or "UNK",
-    #         "size": file_stats.st_size,
-    #         "last_modified": datetime.fromtimestamp(file_stats.st_mtime, tz=datetime.now().astimezone().tzinfo).isoformat(),
-    #         "created": datetime.fromtimestamp(file_stats.st_ctime, tz=datetime.now().astimezone().tzinfo).isoformat(),
-    #         "author": file_stats.st_uid,
-    #         "group": file_stats.st_gid,
-    #         "permissions": oct(file_stats.st_mode & 0o777),
-    #         "info": file_details.strip(),
-    #     }
-    # )
     assert len(data[0]["name"]) > 0
     assert len(data[0]["full_path"]) > 0
     assert len(data[0]["type"]) > 0
