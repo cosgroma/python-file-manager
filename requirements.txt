@@ -2,3 +2,4 @@ docopt
 pygments
 progress
 click
+tqdm

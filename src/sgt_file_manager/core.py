@@ -4,7 +4,7 @@
 Details:    This module contains the core functionality for the file manager
 Created:   Saturday, October 12th 2024, 3:26:09 pm
 -----
-Last Modified: 10/12/2024 05:05:08
+Last Modified: 10/12/2024 06:50:01
 Modified By: Mathew Cosgrove
 -----
 """
@@ -25,7 +25,8 @@ from typing import Any
 from typing import Dict
 from typing import List
 
-from progress.bar import Bar
+# from progress.bar import Bar
+from tqdm import tqdm
 
 
 def file_path_has_str(path: Path, str: str) -> bool:
@@ -39,6 +40,23 @@ def file_path_has_str(path: Path, str: str) -> bool:
         bool:
     """
     return str in path
+
+
+def get_hash_of_content(file_path: Path) -> str:
+    """Get the hash of the content of a file
+
+    Args:
+        file_path (Path): The file to hash
+
+    Returns:
+        str: The hash of the file content
+    """
+    sha256_hash = hashlib.sha256()
+    with Path.open(file_path, "rb") as f:
+        # Read and update hash string value in blocks of 4K
+        for byte_block in iter(lambda: f.read(4096), b""):
+            sha256_hash.update(byte_block)
+    return sha256_hash.hexdigest()
 
 
 def get_file_info(file_path: Path) -> Dict[str, Any]:
@@ -67,7 +85,7 @@ def get_file_info(file_path: Path) -> Dict[str, Any]:
                 "id": str(uuid.UUID(bytes=file_hash[:16])),
                 "name": Path(file_path).name,
                 "full_path": str(file_path),
-                "relative_path": str(Path(file_path).relative_to(Path.cwd())),
+                # "relative_path": str(Path(file_path).relative_to(Path.cwd())),
                 "type": mimetypes.guess_type(file_path, False)[0] or "UNK",
                 "size": file_stats.st_size,
                 "last_modified": datetime.fromtimestamp(file_stats.st_mtime, tz=datetime.now().astimezone().tzinfo).isoformat(),
@@ -143,16 +161,17 @@ def scan_directory(directory: Path) -> List[Dict[str, Any]]:
         print(f"No files found in {directory}")
         return file_info
 
-    bar = Bar(f"Processing {directory}", max=len(files))
-    for file in files:
+    for file in tqdm(files):
         try:
+            # measure execution time
+            # start = datetime.now()
             info = get_file_info(file)
+            # end = datetime.now()
+            # duration = end - start
             if info:
                 file_info.append(info)
         except Exception as e:
             print(f"\nERROR getting info for {file} - {e!s} - SKIPPING")
-        bar.next()
-    bar.finish()
     return file_info
 
 
