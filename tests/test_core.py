@@ -59,7 +59,6 @@ def test_get_file_list_skip_dirs():
     create_skip_dirs()
     files = get_file_list(TMP_TEST_DIR)
     assert len(files) == 0
-
     # cleanup
     cleanup()
 
@@ -68,6 +67,19 @@ def test_cmd_scan():
     create_files()
     output_file = TMP_TEST_DIR / "output.json"
     data = cmd_scan(TMP_TEST_DIR, output_file)
+    # check output_file exists
+    assert output_file.exists()
+    # check if output_file is a json file
+    assert output_file.suffix == ".json"
+    # load data from output_file
+    with Path.open(output_file, "r") as f:
+        json_data = f.read()
+    assert len(json_data) > 0
+
+    # assert data and json_data are equal
+    assert len(data) == len(json_data)
+
+    # check data is a list
     assert len(data) > 0
     assert len(data[0]["name"]) > 0
     assert len(data[0]["full_path"]) > 0
