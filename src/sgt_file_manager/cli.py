@@ -15,8 +15,8 @@ Why does this file exist, and why not put this in __main__?
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
 
+import json
 from pathlib import Path
-from pprint import pprint
 
 import click
 from pygments import formatters
@@ -30,11 +30,26 @@ from .core import cmd_scan
 @click.argument("directory", type=click.Path(exists=True))
 @click.option("--pretty", "-p", is_flag=True)
 @click.option("--db-file", "-f", is_flag=False)
-def sgt_kb_main(directory: str, pretty: bool, db_file: str = "./output_file.json"):
+def sgt_kb_main(directory: str, pretty: bool, db_file: str):
     """CLI interface kb file scanner"""
+    # if db_file is not provided, default to slugified directory name
+    if not db_file:
+        db_file = f"{Path(directory).name.replace(' ', '_').replace('/', '-').lower()}.json"
+
     db_file_path = Path(db_file)
-    data = cmd_scan(directory, db_file_path)
+    already_exists = db_file_path.exists()
+    if already_exists:
+        # load existing data
+        with db_file_path.open("r") as file:
+            data = json.load(file)
+    else:
+        data = cmd_scan(directory, db_file_path)
     if pretty:
         data = highlight(data, lexers.JsonLexer(), formatters.TerminalFormatter())
     else:
-        pprint(data)
+        if already_exists:
+            print(f"Output loaded from  {db_file_path}")
+        else:
+            print(f"Output written to {db_file_path}")
+        print(f"Scanned {len(data)} files")
+        print("Use --pretty to view formatted output")

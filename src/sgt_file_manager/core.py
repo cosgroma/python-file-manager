@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """
 @package   core
-Details:    This module contains the core functionality for the file manager
+Details:   This module contains the core functionality for the file manager
 Created:   Saturday, October 12th 2024, 3:26:09 pm
 -----
-Last Modified: 10/12/2024 06:50:01
+Last Modified: 10/12/2024 07:06:58
 Modified By: Mathew Cosgrove
 -----
 """
@@ -89,6 +89,10 @@ def get_file_info(file_path: Path) -> Dict[str, Any]:
                 "type": mimetypes.guess_type(file_path, False)[0] or "UNK",
                 "size": file_stats.st_size,
                 "last_modified": datetime.fromtimestamp(file_stats.st_mtime, tz=datetime.now().astimezone().tzinfo).isoformat(),
+                "created": datetime.fromtimestamp(file_stats.st_ctime, tz=datetime.now().astimezone().tzinfo).isoformat(),
+                "author": file_stats.st_uid,
+                "group": file_stats.st_gid,
+                "permissions": oct(file_stats.st_mode & 0o777),
                 "info": file_details.strip(),
             }
         )
@@ -186,7 +190,13 @@ def cmd_scan(directory: Path, output_file: Path) -> List[Dict[str, Any]]:
         file_info_list (List[Dict[str, Any]]): The data that was written to the file
     """
     dirpath = Path(directory).absolute()
+    if not dirpath.exists():
+        raise FileNotFoundError(f"Directory {dirpath} does not exist")
+
     file_info_list = scan_directory(dirpath)
+    if output_file.exists():
+        print(f"Warning: Output file {output_file} already exists - overwriting")
+
     with Path.open(output_file, "w") as json_file:
         json.dump(file_info_list, json_file, indent=4)
     return file_info_list
