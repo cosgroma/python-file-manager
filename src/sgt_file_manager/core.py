@@ -4,7 +4,7 @@
 Details:   This module contains the core functionality for the file manager
 Created:   Saturday, October 12th 2024, 3:26:09 pm
 -----
-Last Modified: 10/12/2024 07:59:20
+Last Modified: 10/12/2024 08:06:48
 Modified By: Mathew Cosgrove
 -----
 """
@@ -149,6 +149,11 @@ def get_file_list(directory: Path) -> List[Path]:
             if dir_skip:
                 continue
 
+            # get parent directory of file
+            parent_dir = Path(file_path_no_dir).parent
+            # check if parent directory is a bare git directory
+            if ".git" in str(parent_dir):
+                continue
             if file_path_no_dir.suffix in FILE_EXT_TO_SKIP:
                 continue
             # skip files with extensions in FILE_EXT_TO_SKIP
