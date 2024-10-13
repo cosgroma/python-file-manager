@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -73,7 +74,7 @@ def test_cmd_scan():
     assert output_file.suffix == ".json"
     # load data from output_file
     with Path.open(output_file, "r") as f:
-        json_data = f.read()
+        json_data = json.load(f)
     assert len(json_data) > 0
 
     # assert data and json_data are equal
